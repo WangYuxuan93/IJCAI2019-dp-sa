@@ -1,5 +1,9 @@
 import sys
+import os
 sys.path.extend(["../../","../","./"])
+current_path = os.path.dirname(os.path.realpath(__file__))
+root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(root_path)
 import time
 import torch.optim.lr_scheduler
 import torch.nn as nn
@@ -10,8 +14,8 @@ from driver.Model import *
 from driver.Parser import *
 from data.Dataloader import *
 import pickle
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
+#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def train(data, dev_data, test_data, parser, vocab, config):
@@ -60,7 +64,7 @@ def train(data, dev_data, test_data, parser, vocab, config):
                     evaluate(dev_data, parser, vocab, config.dev_file + '.' + str(global_step))
                 print("Dev: uas = %d/%d = %.2f, las = %d/%d =%.2f" % \
                       (arc_correct, arc_total, dev_uas, rel_correct, arc_total, dev_las))
-
+                sys.stdout.flush()
                 if dev_uas > best_UAS:
                     print("Exceed best uas: history = %.2f, current = %.2f, Iter:%d" %(best_UAS, dev_uas, iter))
                     arc_cor,rel_cor,arc_tot,test_uas,test_las=evaluate(test_data,parser,vocab,config.test_file+'.'+str(global_step))

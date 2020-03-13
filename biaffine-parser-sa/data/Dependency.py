@@ -89,7 +89,7 @@ def readDepTree(file, vocab=None):
         elif len(tok) == 10:
             if tok[6] == '_': tok[6] = '-1'
             try:
-                sentence.append(Dependency(int(tok[0]), tok[1], tok[3], int(tok[4]), tok[5]))
+                sentence.append(Dependency(int(tok[0]), tok[1], tok[3], int(tok[6]), tok[7]))
             except Exception:
                 pass
         else:

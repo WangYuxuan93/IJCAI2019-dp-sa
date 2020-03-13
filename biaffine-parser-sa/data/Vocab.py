@@ -45,6 +45,7 @@ class Vocab(object):
         embedding_dim = -1
         word_count = 0
         with open(embfile, encoding='utf-8') as f:
+            l = f.readline()
             for line in f.readlines():
                 if word_count < 1:
                     values = line.split()
@@ -56,6 +57,7 @@ class Vocab(object):
         index = len(self._id2extword)
         embeddings = np.zeros((word_count + index, embedding_dim))
         with open(embfile, encoding='utf-8') as f:
+            l = f.readline()
             for line in f.readlines():
                 values = line.split()
                 self._id2extword.append(values[0])
