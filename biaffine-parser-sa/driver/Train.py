@@ -134,11 +134,11 @@ class Optimizer:
 
 
 if __name__ == '__main__':
-    random.seed(666)
-    np.random.seed(666)
-    torch.cuda.manual_seed(666)
-    torch.manual_seed(666)
-
+    seed=666
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.manual_seed(seed)
     ### gpu
     gpu = torch.cuda.is_available()
     print("GPU available: ", gpu)
