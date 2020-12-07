@@ -148,6 +148,9 @@ class Configurable(object):
 	def n_layer(self):
 		return self._config.getint('Network','n_layer')
 	@property
+	def n_head(self):
+		return self._config.getint('Network','n_head')
+	@property
 	def d_model(self):
 		return self._config.getint('Network','d_model')
 	@property

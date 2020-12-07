@@ -52,8 +52,8 @@ class MyAttentionEncoder(nn.Module):
         n_position=n_max_seq+1
         #self.n_max_seq=n_max_seq
         self.n_max_seq=1000
-        self.d_model=d_model
         self.config=config
+        self.d_model=config.d_model
         self.position_enc=nn.Embedding(n_position,config.word_dims+config.tag_dims,padding_idx=0)
         self.position_enc.weight.data=position_encoding_init(n_position,config.word_dims+config.tag_dims)
 
@@ -77,7 +77,7 @@ class MyAttentionEncoder(nn.Module):
         self.dropout=nn.Dropout(config.dropout_emb)
 
 
-        self.layer_stack=nn.ModuleList([Encoderlayer(d_model,d_inner_hid,n_head,d_k,d_v,dropout=dropout) for _ in
+        self.layer_stack=nn.ModuleList([Encoderlayer(config.d_model,d_inner_hid,config.n_head,d_k,d_v,dropout=dropout) for _ in
             range(config.n_layer)])
 
         #print("init is end")
@@ -211,15 +211,17 @@ class MultiHeadAttention(nn.Module):
     def __init__(self,d_model,n_head,d_k,d_v,dropout=0.2):
         super(MultiHeadAttention,self).__init__()
         self.n_head=n_head
-        self.d_v=d_v
-        self.d_k=d_k
+        self.d_v = d_model // n_head
+        self.d_k = d_model // n_head
+        #self.d_v=d_v
+        #self.d_k=d_k
 
-        self.w_qs=nn.Parameter(torch.FloatTensor(n_head,d_model,d_k))
-        self.w_ks=nn.Parameter(torch.FloatTensor(n_head,d_model,d_k))
-        self.w_vs=nn.Parameter(torch.FloatTensor(n_head,d_model,d_v))
+        self.w_qs=nn.Parameter(torch.FloatTensor(n_head,d_model,self.d_k))
+        self.w_ks=nn.Parameter(torch.FloatTensor(n_head,d_model,self.d_k))
+        self.w_vs=nn.Parameter(torch.FloatTensor(n_head,d_model,self.d_v))
         
         self.attention=ScaledDotProductSigmoidAttention(d_model)
-        self.linear=Linear(n_head*d_v,d_model,bias=False) #xiugai
+        self.linear=Linear(n_head*self.d_v,d_model,bias=False) #xiugai
         self.layer_norm=LayerNormalization(d_model)
 
         #self.dropout=nn.Dropout(dropout)
